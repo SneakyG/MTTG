@@ -310,7 +310,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- 7. TẢI DỮ LIỆU VÀ RENDER KỶ NIỆM (GOOGLE DRIVE & YOUTUBE) ---
     async function loadData() {
         try {
-            const res = await fetch('./static/metadata.json');
+            const res = await fetch('./metadata.json');
             appData = await res.json();
             
             renderRoadmap();
