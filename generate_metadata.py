@@ -1,10 +1,13 @@
 import os
 import json
 import re
-from datetime import datetime
 from googleapiclient.discovery import build
-from google.oauth2.service_account import Credentials
-from google_auth_oauthlib.flow import InstalledAppFlow
+
+# 1. Credentials cho Drive (Service Account)
+from google.oauth2.service_account import Credentials as ServiceAccountCredentials
+
+# 2. Credentials cho YouTube (OAuth 2.0 User Token)
+from google.oauth2.credentials import Credentials as UserCredentials
 from google.auth.transport.requests import Request
 
 SERVICE_ACCOUNT_FILE = 'credentials.json'
@@ -133,9 +136,12 @@ def fetch_drive_images():
     return images_list
 
 def get_youtube_service():
-    creds = None
+    creds = ServiceAccountCredentials.from_service_account_file(
+        'credentials.json', 
+        scopes=['https://www.googleapis.com/auth/drive.readonly']
+    )
     if os.path.exists('token.json'):
-        creds = Credentials.from_authorized_user_file('token.json', SCOPES)
+        creds = UserCredentials.from_authorized_user_file('token.json', SCOPES)
     if not creds or not creds.valid:
         if creds and creds.expired and creds.refresh_token:
             creds.refresh(Request())
