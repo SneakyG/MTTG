@@ -36,7 +36,7 @@ jobs:
           echo "${{ secrets.YT_TOKEN }}" > token.json
 
       - name: Run metadata generator script
-        run: python auto_generate_metadata.py
+        run: python generate_metadata.py
 
       - name: Clean up credential files
         if: always()
