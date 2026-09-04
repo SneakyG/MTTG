@@ -6,6 +6,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const homeScreen = document.getElementById('home-screen');
     const bgMusic = document.getElementById('bg-music');
     const musicToggle = document.getElementById('music-toggle');
+    let ytPlayer = null;
 
     // Filter & Pagination & Lightbox States
     let appData = null;
@@ -569,6 +570,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    
     // Khởi chạy ứng dụng
     loadData();
 });
