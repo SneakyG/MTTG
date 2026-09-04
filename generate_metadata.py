@@ -22,15 +22,17 @@ YT_SCOPES = ['https://www.googleapis.com/auth/youtube.readonly']
 STAGES = [
     {"key": "1_tim_hieu", "label": "Tìm hiểu", "unlocked": True},
     {"key": "2_nguoi_yeu", "label": "Người yêu", "unlocked": True},
-    {"key": "3_dinh_hon", "label": "Đính hôn", "unlocked": False},
-    {"key": "4_ket_hon", "label": "Kết hôn", "unlocked": False}
+    {"key": "3_vo_chong", "label": "Vợ chồng", "unlocked": False},
+    {"key": "4_co_con", "label": "Con cái", "unlocked": False},
+    {"key": "5_ve_gia", "label": "Về gia", "unlocked": False}
 ]
 
 STAGE_MAP = {
     "tim_hieu": "1_tim_hieu", "1_tim_hieu": "1_tim_hieu",
     "nguoi_yeu": "2_nguoi_yeu", "2_nguoi_yeu": "2_nguoi_yeu",
-    "dinh_hon": "3_dinh_hon", "3_dinh_hon": "3_dinh_hon",
-    "ket_hon": "4_ket_hon", "4_ket_hon": "4_ket_hon"
+    "vo_chong": "3_vo_chong", "3_vo_chong": "3_vo_chong",
+    "co_con": "4_co_con", "4_co_con": "4_co_con",
+    "ve_gia": "5_ve_gia", "5_ve_gia": "5_ve_gia"
 }
 
 def format_date_str(date_str):
