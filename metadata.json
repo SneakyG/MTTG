@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-04 17:36:05",
+  "generated_at": "2026-09-04 13:51:25",
   "stages": [
     {
       "key": "1_tim_hieu",
@@ -259,15 +259,6 @@
       "display_date": "02/09/2026",
       "drive_id": "1jUcmBypRDkxGCzbkvc_dMZJfmrcklakN",
       "caption": "IMG_20260902_210945"
-    },
-    {
-      "type": "youtube",
-      "stage": "2_nguoi_yeu",
-      "date": "2026-09-02",
-      "display_date": "02/09/2026",
-      "playlist_id": "PLa6bET2kaYh8",
-      "youtube_id": "Y5l8oxeMZGY",
-      "caption": "VID 20260902 211506"
     },
     {
       "type": "image",
@@ -556,33 +547,6 @@
       "display_date": "30/08/2026",
       "drive_id": "1dVAqZoU0KGQKEE-QEUJiR-yRwv7Txmiu",
       "caption": "IMG_20260830_202921"
-    },
-    {
-      "type": "youtube",
-      "stage": "2_nguoi_yeu",
-      "date": "2026-08-30",
-      "display_date": "30/08/2026",
-      "playlist_id": "PLVrTel8wZibI",
-      "youtube_id": "X6weE5pqT9U",
-      "caption": "Nhận bông 20260830"
-    },
-    {
-      "type": "youtube",
-      "stage": "2_nguoi_yeu",
-      "date": "2026-08-30",
-      "display_date": "30/08/2026",
-      "playlist_id": "PLVrTel8wZibI",
-      "youtube_id": "L4ykajQfGvk",
-      "caption": "Lè lưỡi 20260830"
-    },
-    {
-      "type": "youtube",
-      "stage": "2_nguoi_yeu",
-      "date": "2026-08-30",
-      "display_date": "30/08/2026",
-      "playlist_id": "PLVrTel8wZibI",
-      "youtube_id": "PxqGizxbq4Y",
-      "caption": "Tạo trái tim 20260830"
     },
     {
       "type": "image",
