@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-04 15:52:01",
+  "generated_at": "2026-09-04 17:26:51",
   "stages": [
     {
       "key": "1_tim_hieu",
@@ -12,13 +12,18 @@
       "unlocked": true
     },
     {
-      "key": "3_dinh_hon",
-      "label": "Đính hôn",
+      "key": "3_vo_chong",
+      "label": "Vợ chồng",
       "unlocked": false
     },
     {
-      "key": "4_ket_hon",
-      "label": "Kết hôn",
+      "key": "4_co_con",
+      "label": "Con cái",
+      "unlocked": false
+    },
+    {
+      "key": "5_ve_gia",
+      "label": "Về gia",
       "unlocked": false
     }
   ],
