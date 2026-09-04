@@ -1,0 +1,10 @@
+# Bỏ qua các file bí mật bảo mật
+credentials.json
+client_secret.json
+token.json
+*.pyc
+__pycache__/
+
+# Bỏ qua môi trường ảo (nếu có)
+venv/
+env/
