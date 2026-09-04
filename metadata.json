@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-04 17:36:05",
+  "generated_at": "2026-09-04 14:05:51",
   "stages": [
     {
       "key": "1_tim_hieu",
@@ -583,6 +583,15 @@
       "playlist_id": "PLVrTel8wZibI",
       "youtube_id": "PxqGizxbq4Y",
       "caption": "Tạo trái tim 20260830"
+    },
+    {
+      "type": "youtube",
+      "stage": "2_nguoi_yeu",
+      "date": "2026-08-30",
+      "display_date": "30/08/2026",
+      "playlist_id": "PLVrTel8wZibI",
+      "youtube_id": "AQ0esSpdhmU",
+      "caption": "Bon srolanh oun te"
     },
     {
       "type": "image",
