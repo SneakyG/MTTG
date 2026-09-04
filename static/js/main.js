@@ -367,18 +367,16 @@ document.addEventListener('DOMContentLoaded', () => {
                 </div>
             `;
         });
-
         container.innerHTML = html;
     }
 
     function setupRoadmapEvents() {
         const container = document.getElementById('roadmap-container');
         if (!container) return;
-
+        
         container.addEventListener('click', (e) => {
             const stepEl = e.target.closest('.stage-step');
             if (!stepEl) return;
-
             const stageKey = stepEl.dataset.key;
             const isUnlocked = stepEl.dataset.unlocked === 'true';
 
@@ -386,9 +384,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 alert("Giai đoạn này chưa tới, cùng chờ đón tương lai nhé! ❤️");
                 return;
             }
-
+            
             currentSelectedStage = stageKey;
-            currentMediaType = 'all';
+            currentMediaType = document.getElementById('media-type-filter')?.querySelector('button.active')?.dataset.type || 'all';
             currentSelectedDate = 'all';
             currentPage = 1;
 
