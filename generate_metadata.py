@@ -210,7 +210,7 @@ def main():
         "media": all_media
     }
 
-    output_path = os.path.join(os.path.dirname(__file__), "static", "metadata.json")
+    output_path = os.path.join(os.path.dirname(__file__), "metadata.json")
     os.makedirs(os.path.dirname(output_path), exist_ok=True)
 
     with open(output_path, "w", encoding="utf-8") as f:
