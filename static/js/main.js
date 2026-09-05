@@ -347,26 +347,67 @@ document.addEventListener('DOMContentLoaded', () => {
         const container = document.getElementById('roadmap-container');
         if (!container || !appData || !appData.stages) return;
 
-        let html = `<div class="roadmap-line"></div>`;
+        // Bộ Icon tương ứng từng giai đoạn (tự động fallback nếu stage dài hơn)
+        const stageIcons = ['🌱', '💖', '💍', '🏡', '👶', '✨'];
+
+        let html = '';
 
         appData.stages.forEach((stage, idx) => {
             const isUnlocked = stage.unlocked;
             const isActive = stage.key === currentSelectedStage;
-            
-            const stateClass = !isUnlocked 
-                ? 'stage-locked' 
-                : (isActive ? 'stage-unlocked stage-active' : 'stage-unlocked');
+
+            // Xử lý Style & Icon cho từng Card
+            let cardStyle = '';
+            let badgeStyle = '';
+            let iconDisplay = stageIcons[idx] || '✨';
+
+            if (isActive) {
+                // Stage đang chọn (Nổi bật nhất)
+                cardStyle = 'bg-gradient-to-b from-rose-500 to-pink-500 text-white shadow-lg shadow-rose-500/30 ring-4 ring-rose-200 scale-105 z-20';
+                badgeStyle = 'bg-white/20 text-white';
+            } else if (isUnlocked) {
+                // Stage đã mở khóa nhưng không chọn
+                cardStyle = 'bg-rose-50 border border-rose-200 text-rose-700 hover:bg-rose-100 z-10';
+                badgeStyle = 'bg-rose-200/60 text-rose-700';
+            } else {
+                // Stage chưa mở khóa (Khóa)
+                cardStyle = 'bg-gray-50/80 border border-dashed border-gray-200 text-gray-400 opacity-60 z-10';
+                badgeStyle = 'bg-gray-200/50 text-gray-400';
+                iconDisplay = '🔒';
+            }
 
             const labelText = isUnlocked ? stage.label : '🔒 ???';
-            const iconText = isUnlocked ? (idx + 1) : '🔒';
 
             html += `
-                <div class="stage-step ${stateClass}" data-key="${stage.key}" data-unlocked="${isUnlocked}">
-                    <div class="stage-icon">${iconText}</div>
-                    <span class="stage-label text-xs md:text-sm text-center">${labelText}</span>
+                <div class="stage-step cursor-pointer relative flex-1 w-full md:w-auto p-3.5 md:p-4 rounded-2xl transition-all duration-300 flex md:flex-col items-center justify-between md:justify-center text-left md:text-center gap-2.5 ${cardStyle}" 
+                    data-key="${stage.key}" 
+                    data-unlocked="${isUnlocked}">
+                    
+                    <!-- Badge Bước + Icon -->
+                    <div class="flex items-center gap-2.5 md:flex-col md:gap-1">
+                        <span class="text-xl md:text-2xl filter drop-shadow-sm">${iconDisplay}</span>
+                        <span class="text-[10px] font-extrabold uppercase tracking-wider px-2 py-0.5 rounded-full ${badgeStyle}">
+                            Bước ${idx + 1}
+                        </span>
+                    </div>
+
+                    <!-- Tên giai đoạn -->
+                    <div class="flex-1 md:flex-initial">
+                        <span class="stage-label font-bold text-xs md:text-sm leading-snug block">
+                            ${labelText}
+                        </span>
+                    </div>
+
+                    <!-- Mũi tên nối giữa các card (chỉ hiện trên Desktop) -->
+                    ${idx < appData.stages.length - 1 ? `
+                        <div class="hidden md:block absolute -right-3 top-1/2 -translate-y-1/2 z-30 text-rose-300 text-xs">
+                            <i class="fa-solid fa-chevron-right"></i>
+                        </div>
+                    ` : ''}
                 </div>
             `;
         });
+
         container.innerHTML = html;
     }
 
@@ -497,7 +538,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (item.type === 'image') {
                 const imgUrl = getDriveImageUrl(item.drive_id || item.src);
                 return `
-                    <div class="media-card cursor-pointer bg-white p-3 rounded-2xl shadow-sm border border-rose-100 hover:shadow-md hover:scale-[1.02] transition"
+                    <div class="media-card cursor-pointer bg-white p-3 rounded-2xl shadow-sm border border-rose-100 hover:shadow-md hover:scale-[1.02] transition polaroid-card"
                          data-index="${idx}">
                         <img src="${imgUrl}" alt="${captionText}" loading="lazy" decoding="async" class="w-full h-52 object-cover rounded-xl mb-2 pointer-events-none">
                         <div class="flex justify-between items-center text-xs text-gray-500 px-1">
@@ -567,8 +608,6 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
-
-    
     // Khởi chạy ứng dụng
     loadData();
 });

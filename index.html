@@ -6,193 +6,468 @@
     <title>Giang ❤️ Triều - Hành Trình Tình Yêu</title>
     <!-- Tailwind CSS qua CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Leaflet CSS (Bản Đồ Kỷ Niệm) -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
     <!-- File CSS tùy chỉnh -->
     <link rel="stylesheet" href="./static/css/style.css">
+    
+    <style>
+        /* Tùy chỉnh thanh cuộn mượt mà */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #f43f5e; border-radius: 10px; }
+        
+        /* Hiệu ứng chuyển cảnh Sidebar mượt */
+        #sidebar {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+    </style>
 </head>
-<body class="bg-rose-50 text-gray-800 min-h-screen overflow-x-hidden font-sans">
+<body class="bg-gradient-to-br from-rose-50 via-pink-50 to-orange-50 text-gray-800 min-h-screen overflow-x-hidden font-sans">
 
-    <!-- INTRO SCREEN CÓ AVATAR GIANG & TRIỀU -->
-    <div id="intro-screen" class="fixed inset-0 z-50 flex flex-col items-center justify-center text-center p-4 transition-opacity duration-800">
-        <!-- Cặp Avatar -->
+    <!-- FILE INPUTS ẨN ĐỂ CHỌN ẢNH -->
+    <input type="file" id="input-avatar-left" accept="image/*" class="hidden">
+    <input type="file" id="input-avatar-right" accept="image/*" class="hidden">
+    <input type="file" id="input-fusion-img" accept="image/*" class="hidden">
+
+    <!-- 1. INTRO SCREEN (CẶP AVATAR & NÚT MỞ) -->
+    <div id="intro-screen" class="fixed inset-0 z-50 flex flex-col items-center justify-center text-center p-4 transition-all duration-700 bg-rose-50/95 backdrop-blur-xl">
         <div class="flex items-center justify-center gap-4 mb-6">
-            <div class="relative">
-                <img src="./static/uploads/avatar/TGiang.jpg" alt="Giang" class="w-20 h-20 md:w-24 md:h-24 rounded-full object-cover border-4 border-white shadow-lg">
-                <span class="absolute -bottom-1 -right-1 bg-rose-500 text-white text-xs px-2 py-0.5 rounded-full font-bold">Giang</span>
+            <div class="relative group">
+                <img id="intro-avatar-left" src="./static/uploads/avatar/TGiang.jpg" alt="Giang" class="w-20 h-20 md:w-24 md:h-24 rounded-full object-cover border-4 border-white shadow-xl transition-transform duration-300 group-hover:scale-105">
+                <span class="absolute -bottom-1 -right-1 bg-rose-500 text-white text-xs px-2 py-0.5 rounded-full font-bold shadow-md">Giang</span>
             </div>
             
             <div class="text-3xl animate-bounce">💖</div>
             
-            <div class="relative">
-                <img src="./static/uploads/avatar/MTrieu.jpg" alt="Triều" class="w-20 h-20 md:w-24 md:h-24 rounded-full object-cover border-4 border-white shadow-lg">
-                <span class="absolute -bottom-1 -right-1 bg-rose-500 text-white text-xs px-2 py-0.5 rounded-full font-bold">Triều</span>
+            <div class="relative group">
+                <img id="intro-avatar-right" src="./static/uploads/avatar/MTrieu.jpg" alt="Triều" class="w-20 h-20 md:w-24 md:h-24 rounded-full object-cover border-4 border-white shadow-xl transition-transform duration-300 group-hover:scale-105">
+                <span class="absolute -bottom-1 -right-1 bg-rose-500 text-white text-xs px-2 py-0.5 rounded-full font-bold shadow-md">Triều</span>
             </div>
         </div>
 
-        <h1 class="text-2xl md:text-3xl font-bold text-rose-600 mb-2">Hành Trình Yêu Thương</h1>
-        <p class="text-gray-600 text-sm mb-8">Chạm vào trái tim để mở hành trình nhé ✨</p>
+        <h1 class="text-2xl md:text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-rose-600 to-pink-500 mb-2">Hành Trình Yêu Thương</h1>
+        <p class="text-gray-500 text-sm mb-8">Chạm vào trái tim để bắt đầu câu chuyện ✨</p>
 
-        <button id="heart-btn" class="focus:outline-none transition-transform active:scale-95">
-            <div id="heart-icon" class="text-7xl md:text-8xl animate-heartbeat cursor-pointer">❤️</div>
+        <button id="heart-btn" class="focus:outline-none transition-transform active:scale-90 hover:scale-110 duration-300">
+            <div id="heart-icon" class="text-7xl md:text-8xl animate-pulse cursor-pointer filter drop-shadow-lg">❤️</div>
         </button>
     </div>
 
-    <!-- 2. TRANG HOME -->
-    <div id="home-screen" class="hidden min-h-screen pb-16">
-        <!-- Background Ảnh mờ mờ của 2 bạn -->
-        <div class="home-bg-overlay">
-            <div id="home-bg-container" class="home-bg-images">
-                <!-- JavaScript sẽ tự động lấy ảnh từ metadata.json đổ vào đây -->
-            </div>
-        </div>
+    <!-- 2. TRANG HOME KHU VỰC CHÍNH -->
+    <div id="home-screen" class="hidden min-h-screen flex relative">
 
-        <!-- KHU VỰC HEADER TỔNG (CONTAINER BANNER) -->
-        <div class="max-w-4xl mx-auto px-4 pt-8 pb-4">
-            <!-- Thẻ Card Trắng Mờ Sang Trọng -->
-            <div class="bg-white/80 backdrop-blur-md rounded-3xl p-6 md:p-8 shadow-xl border border-rose-100/60 relative overflow-hidden">
+        <!-- NÚT MỞ SIDEBAR TRÊN HEADER CHO TẤT CẢ MÀN HÌNH -->
+        <button id="toggle-sidebar-btn" onclick="toggleSidebar()" class="fixed top-4 left-4 z-40 bg-white/80 backdrop-blur-md hover:bg-white text-rose-600 w-11 h-11 rounded-2xl shadow-lg border border-rose-100 flex items-center justify-center transition-all hover:scale-105 active:scale-95">
+            <i class="fa-solid fa-bars text-lg"></i>
+        </button>
+
+        <!-- ================= SIDEBAR MENU ================= -->
+        <aside id="sidebar" class="fixed inset-y-0 left-0 z-50 w-72 bg-white/85 backdrop-blur-xl border-r border-rose-100/80 p-6 flex flex-col justify-between -translate-x-full shadow-2xl">
+            <div>
+                <!-- Brand / Logo Sidebar & Nút Đóng -->
+                <div class="flex items-center justify-between pb-6 border-b border-rose-100 mb-6">
+                    <div class="flex items-center gap-3">
+                        <span class="text-2xl">💖</span>
+                        <div>
+                            <h2 class="font-bold text-rose-600 text-base leading-tight">Giang & Triều</h2>
+                            <p class="text-[11px] text-gray-400 font-medium">Our Love Story</p>
+                        </div>
+                    </div>
+                    <!-- Nút Đóng Menu Sidebar -->
+                    <button onclick="toggleSidebar()" class="w-8 h-8 rounded-full bg-rose-50 text-rose-500 flex items-center justify-center hover:bg-rose-500 hover:text-white transition-all">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </div>
+
+                <!-- Danh sách Menu Tab -->
+                <nav class="space-y-2" id="sidebar-nav">
+                    <button onclick="switchTab('tab-timeline', this)" class="nav-tab-btn active w-full flex items-center gap-3 px-4 py-3 rounded-2xl text-sm font-semibold transition-all text-gray-600 hover:bg-rose-50 hover:text-rose-600">
+                        <i class="fa-solid fa-camera-retro text-base"></i> Hành Trình Kỷ Niệm
+                    </button>
+                    <button onclick="switchTab('tab-map', this)" class="nav-tab-btn w-full flex items-center gap-3 px-4 py-3 rounded-2xl text-sm font-semibold text-gray-600 hover:bg-rose-50 hover:text-rose-600 transition-all">
+                        <i class="fa-solid fa-map-location-dot text-base"></i> Bản Đồ Kỷ Niệm
+                    </button>
+                    <button onclick="switchTab('tab-letters', this)" class="nav-tab-btn w-full flex items-center gap-3 px-4 py-3 rounded-2xl text-sm font-semibold text-gray-600 hover:bg-rose-50 hover:text-rose-600 transition-all">
+                        <i class="fa-solid fa-envelope-open-text text-base"></i> Hộp Thư Tình
+                    </button>
+                </nav>
+            </div>
+
+            <!-- Footer dưới Sidebar -->
+            <div class="text-center pt-4 border-t border-rose-100 text-xs text-rose-400 font-medium">
+                Mãi yêu nhau 3000 ❤️
+            </div>
+        </aside>
+
+        <!-- Overlay mờ khi Sidebar mở -->
+        <div id="sidebar-overlay" onclick="toggleSidebar()" class="hidden fixed inset-0 bg-black/20 backdrop-blur-sm z-40 transition-opacity"></div>
+
+        <!-- ================= KHU VỰC NỘI DUNG CHÍNH ================= -->
+        <div id="main-content" class="flex-1 min-h-screen pb-16 transition-all duration-300 w-full">
+            
+            <!-- Background Container -->
+            <div class="home-bg-overlay">
+                <div id="home-bg-container" class="home-bg-images"></div>
+            </div>
+
+            <!-- ---------------- TAB 1: KỶ NIỆM (TIMELINE) ---------------- -->
+            <div id="tab-timeline" class="tab-content">
                 
-                <!-- Họa tiết hoa/tim mờ trang trí góc card -->
-                <div class="absolute -top-6 -right-6 text-6xl opacity-10 pointer-events-none">💖</div>
-                <div class="absolute -bottom-6 -left-6 text-6xl opacity-10 pointer-events-none">🌸</div>
-
-                <!-- Layout Dàn Ngang trên PC (Flex) -->
-                <div class="flex flex-col md:flex-row items-center justify-between gap-6 md:gap-8 relative z-10">
-                    
-                    <!-- CỘT BÊN TRÁI: AVATAR & TÊN & LỜI CHÚC -->
-                    <div class="flex flex-col items-center md:items-start text-center md:text-left">
+                <!-- CONTAINER BANNER ĐẾM NGÀY YÊU -->
+                <div class="max-w-4xl mx-auto px-4 pt-16 pb-4">
+                    <div class="bg-white/70 backdrop-blur-lg rounded-3xl p-6 md:p-8 shadow-xl border border-white/80 relative overflow-hidden">
                         
-                        <!-- Cụm Avatar Đôi Lớn -->
-                        <div class="flex items-center justify-center mb-3">
-                            <!-- Avatar Giang -->
-                            <div class="w-20 h-20 md:w-24 md:h-24 rounded-full overflow-hidden border-4 border-white shadow-md ring-2 ring-rose-300 transform -rotate-6 hover:rotate-0 transition duration-300">
-                                <img src="./static/uploads/avatar/TGiang.jpg" alt="Giang" class="w-full h-full object-cover">
+                        <div class="flex flex-col md:flex-row items-center justify-between gap-6 md:gap-8 relative z-10">
+                            
+                            <!-- AVATAR & TÊN (CÓ CHỨC NĂNG CHỌN ẢNH VÀ DUNG HỢP) -->
+                            <div class="flex flex-col items-center md:items-start text-center md:text-left">
+                                <div class="flex items-center justify-center mb-3">
+                                    <!-- Avatar Giang -->
+                                    <div onclick="document.getElementById('input-avatar-left').click()" 
+                                         title="Click để đổi ảnh Giang"
+                                         class="relative group cursor-pointer w-20 h-20 md:w-24 md:h-24 rounded-full overflow-hidden border-4 border-white shadow-xl ring-2 ring-rose-200 transform -rotate-6 transition duration-300 hover:rotate-0 hover:scale-105">
+                                        <img id="display-avatar-left" src="./static/uploads/avatar/TGiang.jpg" alt="Giang" class="w-full h-full object-cover">
+                                        <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition flex items-center justify-center text-white text-xs font-bold">
+                                            <i class="fa-solid fa-camera"></i>
+                                        </div>
+                                    </div>
+
+                                    <!-- Trái Tim Dung HợpỞ Giữa -->
+                                    <div onclick="document.getElementById('input-fusion-img').click()" 
+                                         title="Bấm vào đây để chọn ảnh mong ước tương lai"
+                                         class="cursor-pointer w-10 h-10 bg-white rounded-full flex items-center justify-center text-rose-500 text-xl shadow-lg z-10 -mx-3 ring-4 ring-white animate-bounce border border-rose-100 hover:scale-125 transition-transform duration-300">
+                                        ❤️
+                                    </div>
+
+                                    <!-- Avatar Triều -->
+                                    <div onclick="document.getElementById('input-avatar-right').click()" 
+                                         title="Click để đổi ảnh Triều"
+                                         class="relative group cursor-pointer w-20 h-20 md:w-24 md:h-24 rounded-full overflow-hidden border-4 border-white shadow-xl ring-2 ring-rose-200 transform rotate-6 transition duration-300 hover:rotate-0 hover:scale-105">
+                                        <img id="display-avatar-right" src="./static/uploads/avatar/MTrieu.jpg" alt="Triều" class="w-full h-full object-cover">
+                                        <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition flex items-center justify-center text-white text-xs font-bold">
+                                            <i class="fa-solid fa-camera"></i>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <h1 class="text-2xl md:text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-rose-600 to-pink-500 tracking-wide mt-1">
+                                    Giang & Triều
+                                </h1>
+                                <p class="text-xs md:text-sm text-rose-500 font-medium mt-1">
+                                    🗓️ Bên nhau từ: <span class="font-bold text-gray-700">30/08/2026</span>
+                                </p>
                             </div>
 
-                            <!-- Nền trắng viền hồng, icon nảy nhẹ -->
-                            <div class="w-10 h-10 bg-white rounded-full flex items-center justify-center text-rose-500 text-xl shadow-md z-10 -mx-3 ring-4 ring-white animate-pulse border border-rose-200">
-                                ❤️
+                            <div class="hidden md:block w-[1px] h-32 bg-gradient-to-b from-transparent via-rose-200 to-transparent"></div>
+
+                            <!-- ĐỒNG HỒ ĐẾM THỜI GIAN -->
+                            <div class="flex flex-col items-center">
+                                <span class="text-xs uppercase font-extrabold tracking-widest text-rose-400 mb-3">
+                                    ✨ Thời gian đồng hành ✨
+                                </span>
+
+                                <div class="grid grid-cols-4 gap-2 md:gap-3">
+                                    <div class="bg-rose-500 text-white rounded-2xl p-3 text-center min-w-[64px] md:min-w-[72px] shadow-lg shadow-rose-200">
+                                        <span id="days" class="block text-2xl md:text-3xl font-black">0</span>
+                                        <span class="text-[10px] md:text-xs font-medium uppercase opacity-80">Ngày</span>
+                                    </div>
+
+                                    <div class="bg-white/90 border border-rose-100 rounded-2xl p-3 text-center min-w-[64px] md:min-w-[72px] shadow-sm">
+                                        <span id="hours" class="block text-2xl md:text-3xl font-black text-rose-600">0</span>
+                                        <span class="text-[10px] md:text-xs font-semibold text-rose-400 uppercase">Giờ</span>
+                                    </div>
+
+                                    <div class="bg-white/90 border border-rose-100 rounded-2xl p-3 text-center min-w-[64px] md:min-w-[72px] shadow-sm">
+                                        <span id="minutes" class="block text-2xl md:text-3xl font-black text-rose-600">0</span>
+                                        <span class="text-[10px] md:text-xs font-semibold text-rose-400 uppercase">Phút</span>
+                                    </div>
+
+                                    <div class="bg-white/90 border border-rose-100 rounded-2xl p-3 text-center min-w-[64px] md:min-w-[72px] shadow-sm">
+                                        <span id="seconds" class="block text-2xl md:text-3xl font-black text-rose-600">0</span>
+                                        <span class="text-[10px] md:text-xs font-semibold text-rose-400 uppercase">Giây</span>
+                                    </div>
+                                </div>
                             </div>
 
-                            <!-- Avatar Triều -->
-                            <div class="w-20 h-20 md:w-24 md:h-24 rounded-full overflow-hidden border-4 border-white shadow-md ring-2 ring-rose-300 transform rotate-6 hover:rotate-0 transition duration-300">
-                                <img src="./static/uploads/avatar/MTrieu.jpg" alt="Triều" class="w-full h-full object-cover">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 🗺️ SƠ ĐỒ HÀNH TRÌNH TÌNH YÊU -->
+                <section class="max-w-4xl mx-auto px-4 mt-8">
+                    <div class="bg-white/80 backdrop-blur-xl p-6 md:p-8 rounded-3xl shadow-xl border border-white relative">
+                        
+                        <!-- Header Sơ đồ -->
+                        <div class="flex items-center justify-between mb-8 pb-3 border-b border-rose-100">
+                            <div>
+                                <h2 class="text-lg md:text-xl font-bold text-rose-700 flex items-center gap-2">
+                                    <span>✨</span> Hành Trình Yêu Thương
+                                </h2>
+                                <p class="text-xs text-gray-400 mt-0.5">Các cột mốc đáng nhớ của hai đứa</p>
                             </div>
                         </div>
 
-                        <!-- Tên & Ngày -->
-                        <h1 class="text-2xl md:text-3xl font-extrabold text-rose-600 tracking-wide mt-1">
-                            Giang <span class="text-rose-400">&</span> Triều
-                        </h1>
-                        <p class="text-xs md:text-sm text-rose-400 font-medium mt-1">
-                            🗓️ Bên nhau chính thức từ: <span class="font-bold text-gray-600">30/08/2026</span>
-                        </p>
-                        <p class="text-xs italic text-gray-400 mt-2 max-w-xs">
-                            "Cùng nhau đi qua ngàn mùa mưa nắng..."
-                        </p>
+                        <!-- Khung chứa các bước (Render từ JS) -->
+                        <div id="roadmap-container" class="relative flex flex-col md:flex-row items-center justify-between gap-4 md:gap-2">
+                            <!-- JavaScript sẽ render danh sách mốc vào đây -->
+                        </div>
+
+                    </div>
+                </section>
+
+                <!-- 📸 GALLERY KỶ NIỆM -->
+                <main class="max-w-5xl mx-auto px-4 mt-8 space-y-6">
+                    <div class="flex items-center justify-between border-b border-rose-200/60 pb-3">
+                        <h3 id="current-stage-title" class="text-xl md:text-2xl font-bold text-rose-700"></h3>
+                        <span id="media-count" class="text-xs bg-rose-100 text-rose-600 px-3 py-1 rounded-full font-bold"></span>
                     </div>
 
-                    <!-- DƯỜNG PHÂN CÁCH DỌC (Chỉ hiện trên PC) -->
-                    <div class="hidden md:block w-[1px] h-32 bg-gradient-to-b from-transparent via-rose-200 to-transparent"></div>
+                    <div class="bg-white/70 backdrop-blur-md rounded-3xl p-4 md:p-6 shadow-lg border border-white/80">
+                        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">                   
+                            <!-- LỌC MEDIA -->
+                            <div class="flex flex-wrap items-center gap-3">
+                                <div class="inline-flex p-1 bg-rose-50/80 rounded-xl border border-rose-100" id="media-type-filter">
+                                    <button data-type="all" class="filter-btn active px-3 py-1.5 rounded-lg text-xs font-semibold transition">Tất cả</button>
+                                    <button data-type="image" class="filter-btn px-3 py-1.5 rounded-lg text-xs font-semibold text-gray-600 transition">🖼️ Hình ảnh</button>
+                                    <button data-type="video" class="filter-btn px-3 py-1.5 rounded-lg text-xs font-semibold text-gray-600 transition">🎬 Video</button>
+                                </div>
 
-                    <!-- CỘT BÊN PHẢI: ĐỒNG HỒ ĐẾM THỜI GIAN -->
-                    <div class="flex flex-col items-center">
-                        <span class="text-xs uppercase font-bold tracking-wider text-rose-400 mb-3">
-                            ✨ Thời gian đã đồng hành ✨
-                        </span>
-
-                        <!-- Các ô đếm số -->
-                        <div class="grid grid-cols-4 gap-2 md:gap-3">
-                            <div class="bg-rose-50/80 border border-rose-200/60 rounded-2xl p-3 text-center min-w-[64px] md:min-w-[72px] shadow-sm">
-                                <span id="days" class="block text-2xl md:text-3xl font-black text-rose-600">5</span>
-                                <span class="text-[10px] md:text-xs font-semibold text-rose-400 uppercase">Ngày</span>
-                            </div>
-
-                            <div class="bg-rose-50/80 border border-rose-200/60 rounded-2xl p-3 text-center min-w-[64px] md:min-w-[72px] shadow-sm">
-                                <span id="hours" class="block text-2xl md:text-3xl font-black text-rose-600">12</span>
-                                <span class="text-[10px] md:text-xs font-semibold text-rose-400 uppercase">Giờ</span>
-                            </div>
-
-                            <div class="bg-rose-50/80 border border-rose-200/60 rounded-2xl p-3 text-center min-w-[64px] md:min-w-[72px] shadow-sm">
-                                <span id="minutes" class="block text-2xl md:text-3xl font-black text-rose-600">1</span>
-                                <span class="text-[10px] md:text-xs font-semibold text-rose-400 uppercase">Phút</span>
-                            </div>
-
-                            <div class="bg-rose-50/80 border border-rose-200/60 rounded-2xl p-3 text-center min-w-[64px] md:min-w-[72px] shadow-sm">
-                                <span id="seconds" class="block text-2xl md:text-3xl font-black text-rose-600">3</span>
-                                <span class="text-[10px] md:text-xs font-semibold text-rose-400 uppercase">Giây</span>
+                                <select id="date-filter" class="bg-white/90 border border-rose-200 text-gray-700 text-xs rounded-xl px-3 py-2 outline-none focus:ring-2 focus:ring-rose-400">
+                                    <option value="all">📅 Tất cả ngày</option>
+                                </select>
                             </div>
                         </div>
-                    </div>
 
+                        <!-- LƯỚI KHUNG ẢNH -->
+                        <div id="stage-gallery" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 min-h-[300px]"></div>
+
+                        <!-- PHÂN TRANG -->
+                        <div id="pagination-container" class="flex justify-center items-center gap-2 mt-8"></div>
+                    </div>
+                </main>
+            </div>
+
+            <!-- ---------------- TAB 2: BẢN ĐỒ ---------------- -->
+            <div id="tab-map" class="tab-content hidden max-w-5xl mx-auto px-4 pt-16">
+                <div class="bg-white/70 backdrop-blur-md p-6 rounded-3xl shadow-xl border border-white/80">
+                    <h2 class="text-2xl font-bold text-rose-700 mb-1">📍 Bản Đồ Kỷ Niệm</h2>
+                    <p class="text-xs text-gray-500 mb-6">Những nơi hai ta từng đi qua...</p>
+                    <div id="love-map" class="w-full h-[500px] rounded-2xl shadow-inner border border-rose-100 z-10"></div>
                 </div>
             </div>
+
+            <!-- ---------------- TAB 3: THƯ TÌNH ---------------- -->
+            <div id="tab-letters" class="tab-content hidden max-w-4xl mx-auto px-4 pt-16">
+                <div class="bg-white/70 backdrop-blur-md p-8 rounded-3xl shadow-xl border border-white/80 text-center">
+                    <div class="text-5xl mb-4">💌</div>
+                    <h2 class="text-2xl font-bold text-rose-700 mb-2">Hộp Thư Tình Yêu</h2>
+                    <p class="text-gray-500 text-sm">Gửi gắm những tâm tư chưa kịp trao...</p>
+                </div>
+            </div>
+
         </div>
-
-        <!-- 🗺️ SƠ ĐỒ TRẠNG THÁI HÀNH TRÌNH -->
-        <section class="max-w-4xl mx-auto px-4 mt-8">
-            <div class="bg-white/80 backdrop-blur-md p-6 rounded-3xl shadow-sm border border-rose-100">
-                <h2 class="text-center text-lg font-bold text-rose-800 mb-6">Hành Trình Tình Yêu</h2>
-                <div id="roadmap-container" class="flex items-center justify-between relative">
-                    <!-- Sơ đồ sẽ được render động từ JS -->
-                </div>
-            </div>
-        </section>
-
-        <!-- 📸 KHU VỰC HIỂN THỊ KỶ NIỆM THEO TRẠNG THÁI DƯỢC CHỌN -->
-        <main class="max-w-5xl mx-auto px-4 mt-10 space-y-8">
-            <div class="flex items-center justify-between border-b border-rose-200 pb-3">
-                <h3 id="current-stage-title" class="text-2xl font-bold text-rose-700">
-                    <!-- Tên giai đoạn đang chọn -->
-                </h3>
-                <span id="media-count" class="text-sm bg-rose-100 text-rose-600 px-3 py-1 rounded-full font-medium"></span>
-            </div>
-
-            <div class="mt-8 bg-white/80 backdrop-blur-md rounded-3xl p-4 md:p-6 shadow-sm border border-rose-100">
-                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">                   
-                    <!-- BỘ LỌC MEDIA & NGÀY -->
-                    <div class="flex flex-wrap items-center gap-3">
-                        <!-- Filter Loại Media -->
-                        <div class="inline-flex p-1 bg-rose-50 rounded-xl border border-rose-100" id="media-type-filter">
-                            <button data-type="all" class="filter-btn active px-3 py-1.5 rounded-lg text-xs font-semibold transition">Tất cả</button>
-                            <button data-type="image" class="filter-btn px-3 py-1.5 rounded-lg text-xs font-semibold text-gray-600 transition">🖼️ Hình ảnh</button>
-                            <button data-type="video" class="filter-btn px-3 py-1.5 rounded-lg text-xs font-semibold text-gray-600 transition">🎬 Video</button>
-                        </div>
-
-                        <!-- Filter Chọn Ngày -->
-                        <select id="date-filter" class="bg-white border border-rose-200 text-gray-700 text-xs rounded-xl px-3 py-2 outline-none focus:ring-2 focus:ring-rose-400">
-                            <option value="all">📅 Tất cả các ngày</option>
-                        </select>
-                    </div>
-                </div>
-
-                <!-- GALLERY CONTAINER -->
-                <div id="stage-gallery" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 min-h-[300px]"></div>
-
-                <!-- PHÂN TRANG (PAGINATION) -->
-                <div id="pagination-container" class="flex justify-center items-center gap-2 mt-6"></div>
-            </div>
-        </main>
     </div>
 
-    <!-- Thẻ Audio ẩn để phát nhạc nền -->
+    <!-- ================= POPUP ANIMATION DUNG HỢP (CHỮ NHẬT DỌC & SHOW ĐỦ ẢNH) ================= -->
+    <div id="fusion-modal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-black/80 backdrop-blur-xl transition-all duration-500">
+        
+        <!-- Modal Card dạng chữ nhật dọc (max-w-md / Portrait) -->
+        <div class="bg-gradient-to-b from-white/95 to-rose-50/90 backdrop-blur-2xl border border-white/80 rounded-[32px] p-5 md:p-6 max-w-sm md:max-w-md w-full text-center shadow-[0_25px_60px_-15px_rgba(244,63,94,0.3)] relative overflow-hidden flex flex-col items-center">
+            
+            <!-- Nút Đóng Popup -->
+            <button onclick="closeFusionModal()" class="absolute top-4 right-4 w-9 h-9 rounded-full bg-white/80 text-rose-500 hover:bg-rose-500 hover:text-white transition-all duration-300 flex items-center justify-center z-30 shadow-md">
+                <i class="fa-solid fa-xmark text-lg"></i>
+            </button>
+
+            <!-- Tiêu đề nhỏ xinh -->
+            <div class="text-xs font-bold uppercase tracking-widest text-rose-500 mb-3 flex items-center gap-1.5">
+                <span class="animate-spin">✨</span> Mảnh Ghép Hoàn Hảo <span class="animate-spin">✨</span>
+            </div>
+
+            <!-- KHUNG CHỮ NHẬT DỌC (ASPECT 3/4) CỨNG CÁP -->
+            <div class="relative w-full aspect-[3/4] rounded-2xl overflow-hidden bg-slate-900 flex items-center justify-center border-2 border-white/80 shadow-2xl group">
+                
+                <!-- 1. Background Blur nghệ thuật từ chính bức ảnh (giúp khung hình lung linh) -->
+                <img id="anim-fusion-bg" src="" class="absolute inset-0 w-full h-full object-cover blur-xl opacity-50 scale-125 transition-opacity duration-1000">
+
+                <!-- 2. Avatar Giang -->
+                <img id="anim-avatar-left" src="./static/uploads/avatar/TGiang.jpg" 
+                    class="absolute w-28 h-28 md:w-32 md:h-32 rounded-full object-cover border-4 border-white glow-ring z-10 transition-all duration-[2200ms]">
+                
+                <!-- 3. Avatar Triều -->
+                <img id="anim-avatar-right" src="./static/uploads/avatar/MTrieu.jpg" 
+                    class="absolute w-28 h-28 md:w-32 md:h-32 rounded-full object-cover border-4 border-white glow-ring z-10 transition-all duration-[2200ms]">
+                
+                <!-- 4. Vùng sáng bùng nổ hiệu ứng -->
+                <div id="anim-glow-effect" class="absolute w-32 h-32 rounded-full bg-gradient-to-r from-rose-400 via-pink-400 to-amber-300 opacity-0 blur-2xl transition-all pointer-events-none"></div>
+
+                <!-- 5. BỨC ẢNH DUNG HỢP CHÍNH: Hiển thị 100% KHÔNG BỊ CẮT BỚT (object-contain) -->
+                <img id="anim-fusion-result" src="" 
+                    class="relative z-20 max-w-full max-h-full object-contain rounded-xl drop-shadow-2xl opacity-0 scale-75 transition-all duration-[1600ms] cubic-bezier(0.34, 1.56, 0.64, 1)">
+            </div>
+
+            <!-- KHU VỰC LỜI CHÚC TRÔI LÊN -->
+            <div id="fusion-wish-box" class="mt-4 opacity-0 transform translate-y-6 transition-all duration-[1200ms] ease-out">
+                <p id="fusion-wish-text" class="text-xs md:text-sm text-gray-700 italic font-medium leading-relaxed px-2 bg-white/70 backdrop-blur-md py-3 rounded-2xl border border-rose-100 shadow-sm">
+                    "Tặng người con gái anh yeu nhất, mong rằng chúng ta sẽ luôn hạnh phúc bên nhau và cùng nhau tạo nên những kỷ niệm đẹp trong tương lai. Mãi yêu em Mỹ Triều ❤️"
+                </p>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Audio & Control -->
     <audio id="bg-music" loop preload="auto">
         <source src="./static/audio/THẾ GIỚI CỦA ANH.mp3" type="audio/mpeg">
-        Trình duyệt của bạn không hỗ trợ phát âm thanh.
     </audio>
     
-    <!-- Nút âm nhạc ẩn mặc định (hidden), cố định ở góc dưới màn hình -->
-    <button id="music-toggle" 
-            class="hidden fixed bottom-6 right-6 z-50 bg-white/80 backdrop-blur-md p-3.5 rounded-full shadow-xl border border-rose-200 text-2xl hover:scale-110 active:scale-95 transition-all duration-300">
+    <button id="music-toggle" class="hidden fixed bottom-6 right-6 z-40 bg-white/90 backdrop-blur-md p-3.5 rounded-full shadow-2xl border border-rose-200 text-2xl hover:scale-110 active:scale-95 transition-all">
         🎵
     </button>
-    <!-- File JavaScript chính -->
+
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script src="./static/js/main.js"></script>
+
+    <!-- JS TƯƠNG TÁC GIAO DIỆN -->
     <script>
-        // Gọi hàm tải dữ liệu ngay khi trang web vừa nạp xong
+        // Bật / Tắt Sidebar Menu
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('sidebar-overlay');
+            
+            sidebar.classList.toggle('-translate-x-full');
+            overlay.classList.toggle('hidden');
+        }
+
+        // Chuyển Tab
+        function switchTab(tabId, btnElement) {
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.add('hidden'));
+            
+            document.querySelectorAll('.nav-tab-btn').forEach(btn => {
+                btn.classList.remove('active', 'bg-rose-500', 'text-white', 'shadow-md');
+                btn.classList.add('text-gray-600');
+            });
+
+            const targetTab = document.getElementById(tabId);
+            if (targetTab) targetTab.classList.remove('hidden');
+
+            btnElement.classList.add('active', 'bg-rose-500', 'text-white', 'shadow-md');
+            btnElement.classList.remove('text-gray-600');
+
+            if (window.innerWidth < 768) {
+                toggleSidebar();
+            }
+
+            if (tabId === 'tab-map' && window.loveMap) {
+                setTimeout(() => { window.loveMap.invalidateSize(); }, 200);
+            }
+        }
+        // CHỨC NĂNG DUNG HỢP AVATAR
         document.addEventListener('DOMContentLoaded', () => {
             if (typeof loadData === 'function') {
                 loadData();
             }
+
+            const inputLeft = document.getElementById('input-avatar-left');
+            const inputRight = document.getElementById('input-avatar-right');
+            const inputFusion = document.getElementById('input-fusion-img');
+
+            if (inputLeft) {
+                inputLeft.addEventListener('change', (e) => {
+                    const file = e.target.files[0];
+                    if (file) {
+                        const url = URL.createObjectURL(file);
+                        document.getElementById('display-avatar-left').src = url;
+                        document.getElementById('intro-avatar-left').src = url;
+                        document.getElementById('anim-avatar-left').src = url;
+                    }
+                });
+            }
+
+            if (inputRight) {
+                inputRight.addEventListener('change', (e) => {
+                    const file = e.target.files[0];
+                    if (file) {
+                        const url = URL.createObjectURL(file);
+                        document.getElementById('display-avatar-right').src = url;
+                        document.getElementById('intro-avatar-right').src = url;
+                        document.getElementById('anim-avatar-right').src = url;
+                    }
+                });
+            }
+
+            if (inputFusion) {
+                inputFusion.addEventListener('change', (e) => {
+                    const file = e.target.files[0];
+                    if (file) {
+                        const fusionUrl = URL.createObjectURL(file);
+                        startFusionAnimation(fusionUrl);
+                    }
+                });
+            }
         });
+
+        function startFusionAnimation(fusionImageUrl) {
+            const modal = document.getElementById('fusion-modal');
+            const animLeft = document.getElementById('anim-avatar-left');
+            const animRight = document.getElementById('anim-avatar-right');
+            const glow = document.getElementById('anim-glow-effect');
+            const resultImg = document.getElementById('anim-fusion-result');
+            const resultBg = document.getElementById('anim-fusion-bg');
+            const wishBox = document.getElementById('fusion-wish-box');
+
+            // Gán đường dẫn ảnh
+            resultImg.src = fusionImageUrl;
+            resultBg.src = fusionImageUrl;
+            
+            // Mở Modal
+            modal.classList.remove('hidden');
+            
+            // Reset toàn bộ trạng thái về ban đầu
+            animLeft.className = "absolute w-28 h-28 md:w-32 md:h-32 rounded-full object-cover border-4 border-white glow-ring z-10 transition-all duration-[2200ms] avatar-pos-left";
+            animRight.className = "absolute w-28 h-28 md:w-32 md:h-32 rounded-full object-cover border-4 border-white glow-ring z-10 transition-all duration-[2200ms] avatar-pos-right";
+            
+            glow.className = "absolute w-32 h-32 rounded-full bg-gradient-to-r from-rose-400 via-pink-400 to-amber-300 opacity-0 blur-2xl transition-all pointer-events-none";
+            resultImg.className = "relative z-20 max-w-full max-h-full object-contain rounded-xl drop-shadow-2xl opacity-0 scale-75 transition-all duration-[1600ms] cubic-bezier(0.34, 1.56, 0.64, 1)";
+            resultBg.className = "absolute inset-0 w-full h-full object-cover blur-xl opacity-0 scale-125 transition-opacity duration-1000";
+            wishBox.className = "mt-4 opacity-0 transform translate-y-6 transition-all duration-[1200ms] ease-out";
+
+            // TIMELINE ANIMATION DUNG HỢP
+            // 1. Sau 600ms: Hai Avatar xoáy 3D vào tâm
+            setTimeout(() => {
+                animLeft.classList.add('avatar-merge-left');
+                animRight.classList.add('avatar-merge-right');
+            }, 600);
+
+            // 2. Sau 2700ms: Chạm nhau tại tâm -> Bùng nổ hào quang lấp lánh
+            setTimeout(() => {
+                glow.classList.add('super-burst');
+            }, 2700);
+
+            // 3. Sau 3200ms: Ảnh dung hợp hiện ra nguyên vẹn 100% không bị cắt, bung nhẹ nhàng
+            setTimeout(() => {
+                resultBg.classList.remove('opacity-0');
+                resultBg.classList.add('opacity-50');
+                
+                resultImg.classList.remove('opacity-0', 'scale-75');
+                resultImg.classList.add('opacity-100', 'scale-100');
+            }, 3200);
+
+            // 4. Sau 4200ms: Khung lời chúc xuất hiện mượt mà bên dưới
+            setTimeout(() => {
+                wishBox.classList.remove('opacity-0', 'translate-y-6');
+                wishBox.classList.add('opacity-100', 'translate-y-0');
+            }, 4200);
+        }
+
+        function closeFusionModal() {
+            const modal = document.getElementById('fusion-modal');
+            if (modal) modal.classList.add('hidden');
+        }
     </script>
 </body>
 </html>

@@ -275,3 +275,128 @@ img {
     border-color: #e11d48;
     box-shadow: 0 2px 6px rgba(225, 29, 72, 0.3);
 }
+
+/* Khung chứa danh sách ảnh */
+.photo-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+  justify-content: center;
+  padding: 20px;
+}
+
+/* Thẻ khung ảnh Polaroid */
+.polaroid-card {
+  position: relative;
+  background: #ffffff;
+  padding: 12px 12px 30px 12px; /* Lề dưới rộng ra đúng chuẩn ảnh Polaroid */
+  border-radius: 2px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s ease;
+  max-width: 280px;
+}
+
+/* Tạo độ nghiêng ngẫu nhiên cho các ảnh để nhìn tự nhiên hơn */
+.polaroid-card:nth-child(odd) {
+  transform: rotate(-2deg);
+}
+
+.polaroid-card:nth-child(even) {
+  transform: rotate(1.5deg);
+}
+
+.polaroid-card:nth-child(3n) {
+  transform: rotate(-1deg);
+}
+
+/* Tấm ảnh bên trong */
+.polaroid-card img {
+  width: 100%;
+  height: 220px;
+  object-fit: cover;
+  border-radius: 1px;
+}
+
+/* Dòng chữ / Nhãn ngày bên dưới ảnh (nếu có) */
+.polaroid-caption {
+  font-family: 'Dancing Script', 'Caveat', cursive, sans-serif; /* Font chữ viết tay lãng mạn */
+  font-size: 1.1rem;
+  color: #555;
+  text-align: center;
+  margin-top: 10px;
+}
+
+/* Miếng băng dính dán ở góc trên (Tùy chọn tạo hiệu ứng dán tường) */
+.polaroid-card::before {
+  content: "";
+  position: absolute;
+  top: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 70px;
+  height: 20px;
+  background: rgba(255, 255, 255, 0.6);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  backdrop-filter: blur(1px);
+}
+
+/* Hiệu ứng khi di chuột (Hover) hoặc chạm vào trên điện thoại */
+.polaroid-card:hover {
+  transform: rotate(0deg) scale(1.05); /* Thẳng ảnh lại và phóng to nhẹ */
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.18);
+  z-index: 10;
+}
+/* Hiệu ứng nhún nhẹ khi rê chuột vào Card Giai Đoạn */
+.roadmap-card {
+    will-change: transform;
+}
+.roadmap-card:hover {
+    transform: translateY(-3px);
+}
+/* Hiệu ứng chuyển cảnh Sidebar mượt */
+#sidebar {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ================= ANIMATION DUNG HỢP CAO CẤP ================= */
+/* Trạng thái ban đầu của 2 Avatar */
+.avatar-pos-left { 
+    transform: translateX(-100px) translateY(0) rotate(-12deg) scale(1); 
+}
+.avatar-pos-right { 
+    transform: translateX(100px) translateY(0) rotate(12deg) scale(1); 
+}
+
+/* 2 Avatar xoáy 3D hòa vào tâm */
+.avatar-merge-left {
+    transform: translateX(0) translateY(0) rotate(1080deg) scale(0.05) !important;
+    opacity: 0 !important;
+    transition: all 2.2s cubic-bezier(0.68, -0.55, 0.265, 1.55) !important;
+}
+.avatar-merge-right {
+    transform: translateX(0) translateY(0) rotate(-1080deg) scale(0.05) !important;
+    opacity: 0 !important;
+    transition: all 2.2s cubic-bezier(0.68, -0.55, 0.265, 1.55) !important;
+}
+
+/* Vòng sáng bùng nổ hoa tuyết / trái tim */
+.super-burst {
+    animation: magicBurst 1.8s ease-out forwards;
+}
+
+@keyframes magicBurst {
+    0% { transform: scale(0.2) rotate(0deg); opacity: 0; filter: brightness(2); }
+    40% { transform: scale(2.5) rotate(180deg); opacity: 1; filter: brightness(2.5); }
+    100% { transform: scale(4.5) rotate(360deg); opacity: 0; filter: brightness(1); }
+}
+
+/* Hiệu ứng hào quang xung quanh avatar ban đầu */
+.glow-ring {
+    box-shadow: 0 0 25px 8px rgba(244, 63, 94, 0.6);
+    animation: ringPulse 2s infinite alternate ease-in-out;
+}
+@keyframes ringPulse {
+    0% { box-shadow: 0 0 15px 4px rgba(244, 63, 94, 0.4); }
+    100% { box-shadow: 0 0 35px 12px rgba(244, 63, 94, 0.8); }
+}
