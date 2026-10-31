@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-31 16:22:11",
+  "generated_at": "2026-10-31 16:27:01",
   "stages": [
     {
       "key": "1_tim_hieu",
@@ -28,14 +28,6 @@
     }
   ],
   "media": [
-    {
-      "type": "image",
-      "stage": "2_nguoi_yeu",
-      "date": "2026-10-25",
-      "display_date": "25/10/2026",
-      "drive_id": "1wH2-ZbC4Ni2LX-w34uyiCI_Iqr4tviHg",
-      "caption": "IMG_20260830_202524"
-    },
     {
       "type": "image",
       "stage": "2_nguoi_yeu",
